@@ -14,7 +14,9 @@ resolvers += "grizzled-slf4j-resolver-0" at "https://oss.sonatype.org/content/re
 
 libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "2.2.0" % "test",
-  "org.clapper" %% "grizzled-slf4j" % "1.0.2"
+  "org.clapper" %% "grizzled-slf4j" % "1.0.2",
+  "org.slf4j" % "slf4j-simple" % "1.7.7",
+  "org.apache.commons" % "commons-lang3" % "3.1"
 )
 
 seq(lsSettings :_*)

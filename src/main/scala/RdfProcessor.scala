@@ -1,7 +1,7 @@
 package com.elegantcoding.rdfProcessor
 
 import rdftriple.rdftriple.RdfTriple
-import java.io.{StringWriter, PrintWriter, BufferedReader}
+import java.io.BufferedReader
 import rdftriple._
 import grizzled.slf4j.Logger
 
@@ -9,16 +9,8 @@ package object rdfProcessor {
   val logger = Logger("com.elegantcoding.rdf-processor")
 
   type RdfTripleFilter = Option[(String, String, String) => String]
-
   type RdfLineProcessor = (RdfTriple, String) => Unit
-
   type CleanerFunction = Option[String => String]
-
-  def stackTraceToString(throwable: Throwable) {
-    val stringWriter = new StringWriter()
-    throwable.printStackTrace(new PrintWriter(stringWriter))
-    stringWriter.toString()
-  }
 
   def formatTime(elapsedTime: Long) = {
     "%02d:%02d:%02d".format((elapsedTime / 1000) / 3600,
@@ -30,7 +22,6 @@ package object rdfProcessor {
 import rdfProcessor._
 
 trait RfdCleaner {
-
   val subjectCleaner: CleanerFunction
   val predicateCleaner: CleanerFunction
   val objectCleaner: CleanerFunction
@@ -48,7 +39,6 @@ trait RfdCleaner {
 }
 
 object RfdCleaner {
-
   def apply() = emptyRdfCleaner
 
   def apply(f1: String => String, f2: String => String, f3: String => String) = new Object with RfdCleaner {
@@ -64,11 +54,8 @@ object emptyRdfCleaner extends RfdCleaner {
   override val objectCleaner = None
 }
 
-
 abstract class RdfFileProcessor {
-
   val ONE_MILLION = 1000000L
-
   val startTime = System.currentTimeMillis
   var lastTime = System.currentTimeMillis
 
@@ -81,11 +68,10 @@ abstract class RdfFileProcessor {
 
   def handleInvalidTriple(rdfTriple: RdfTriple, tripleString: String) = {}
 
-  def printStatus(processName: String, processStartTime: Long, rdfLineCount: Long) = {
-
+  def logStatus(processStartTime: Long, rdfLineCount: Long) = {
     if (rdfLineCount % (ONE_MILLION * 10L) == 0) {
       val curTime = System.currentTimeMillis
-      println(processName + ": " + rdfLineCount / 1000000 + "M tripleString lines processed" +
+      logger.info(processName + ": " + rdfLineCount / 1000000 + "M tripleString lines processed" +
         "; last 10M: " + formatTime(curTime - lastTime) +
         "; process elapsed: " + formatTime(curTime - processStartTime) +
         " total elapsed: " + formatTime(curTime - startTime))
@@ -100,55 +86,35 @@ abstract class RdfFileProcessor {
       rfdCleaner.cleanObject(obj))
   }
 
-  @inline def parseTriple(rdfLine: String) = {
-
+  def parseTriple(rdfLine: String) = {
     val idx = rdfLine.indexOf('\t')
-
     if (idx <= 0)
       InvalidRdfTriple(rdfLine.substring(0, idx))
-
     val first = rdfLine.substring(0, idx)
-
     val idx2 = rdfLine.indexOf('\t', idx + 1)
-
     if (idx2 <= 0)
       InvalidRdfTriple(first,
         rdfLine.substring(idx + 1, idx2))
-
     val second = rdfLine.substring(idx + 1, idx2)
-
     val idx3 = rdfLine.lastIndexOf('\t')
-
     val third = rdfLine.substring(idx2 + 1, idx3)
-
     validateRdfTriple(first, second, third)
   }
 
-  @inline def processRdfFile() = {
-
+  def processRdfFile() = {
     val processStartTime = System.currentTimeMillis
-
     val rdfStream = getRdfStream
-
     var rdfLineCount = 0
-
     try {
       Stream.continually(rdfStream.readLine)
         .takeWhile(_ != null)
         .foreach((tripleString) => {
-
         rdfLineCount += 1
-
-        printStatus(processName, processStartTime, rdfLineCount)
-
+        logStatus(processStartTime, rdfLineCount)
         val rdfTriple = parseTriple(tripleString)
-
         if (rdfTriple.isValid) {
-
           rdfLineProcessor(rdfTriple, tripleString)
-
         } else {
-
           handleInvalidTriple(rdfTriple, tripleString)
         }
       })
@@ -159,32 +125,3 @@ abstract class RdfFileProcessor {
   }
 }
 
-
-abstract class RdfProcessor extends App {
-  init
-
-  try {
-    processFiles(getRdfFileProcessorSeq)
-  }
-  finally {
-    shutdown
-  }
-
-  def getRdfFileProcessorSeq: Seq[RdfFileProcessor]
-
-  def init: Unit = {}
-
-  def shutdown: Unit = {}
-
-
-  def processFiles(rdfFileProcessorSeq: Seq[RdfFileProcessor]) = {
-
-    for (rdfFileProcessor <- rdfFileProcessorSeq) {
-      try {
-        rdfFileProcessor.processRdfFile
-      }
-      finally {
-      }
-    }
-  }
-}

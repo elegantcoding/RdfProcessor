@@ -17,4 +17,14 @@ class RdfProcessorSpec extends FlatSpec with Matchers {
     res should equal(ValidRdfTriple("hello","this","test"))
   }
 
+  "RdfFileProcessor.printStatus" should "be able to print the status" in {
+    val res = (new ConcreteRdfFileProcessor).printStatus(10000000L,0)
+    res should equal(1)
+  }
+
+  "rdfProcessor.formatTime" should "be able to format time" in {
+    val res = rdfProcessor.formatTime(12345678)
+    res should equal("03:25:45")
+  }
+
 }
