@@ -1,26 +1,34 @@
-import AssemblyKeys._ // put this at the top of the file
+name := "rdf-processor"
 
-assemblySettings
-
-name := "rdfProcessor"
-
-
-version := "0.1.0"
+version := "0.2.0"
 
 organization := "com.elegantcoding"
 
-scalaVersion := "2.10.3"
+scalaVersion := "2.11.1"
 
 scalacOptions ++= Seq("-encoding", "UTF-8", "-deprecation", "-unchecked", "-feature")
 
+publishTo := Some(Resolver.file("file",  new File( "c:/usr/elegantcoding.github.io/repo/releases" )) )
+
+resolvers += "grizzled-slf4j-resolver-0" at "https://oss.sonatype.org/content/repositories/releases"
+
 libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "1.9.1" % "test",
-  "com.typesafe" % "config" % "1.0.2"
+  "org.scalatest" %% "scalatest" % "2.2.0" % "test",
+  "org.clapper" %% "grizzled-slf4j" % "1.0.2"
 )
 
 seq(lsSettings :_*)
 
-(LsKeys.tags in LsKeys.lsync) := Seq("rdf")
+(LsKeys.tags in LsKeys.lsync) := Seq("rdf", "ntriples", "nquads")
 
 (description in LsKeys.lsync) :=
   "generic RDF processor."
+
+(externalResolvers in LsKeys.lsync) := Seq(
+  "elegantcoding releases" at "http://elegantcoding.github.io/repo/releases")
+
+instrumentSettings
+
+coverallsSettings
+
+CoverallsKeys.coverallsToken := Some("eztl2jIYCPjwA2JxIniEvkmkEqZYozlfP")
