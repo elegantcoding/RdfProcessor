@@ -3,19 +3,20 @@ package com.elegantcoding.rdfProcessor
 import rdftriple.rdftriple.RdfTriple
 import java.io.BufferedReader
 import rdftriple._
-import grizzled.slf4j.Logger
+//import grizzled.slf4j.Logger
 
 package object rdfProcessor {
-  val logger = Logger("com.elegantcoding.rdf-processor")
+  //val logger = Logger("com.elegantcoding.rdf-processor")
 
   type RdfTripleFilter = Option[(String, String, String) => String]
-  type RdfLineProcessor = (RdfTriple, String) => Unit
+  type RdfLineProcessor = (RdfTriple) => Unit
   type CleanerFunction = Option[String => String]
 
   def formatTime(elapsedTime: Long) = {
-    "%02d:%02d:%02d".format((elapsedTime / 1000) / 3600,
-      (((elapsedTime / 1000) / 60) % 60),
-      ((elapsedTime / 1000) % 60))
+    "%02d:%02d:%02d".format(
+      (elapsedTime / 1000) / 3600,
+      ((elapsedTime / 1000) / 60) % 60,
+      (elapsedTime / 1000) % 60)
   }
 }
 
@@ -66,8 +67,9 @@ abstract class RdfFileProcessor {
 
   def getRdfStream: BufferedReader
 
-  def handleInvalidTriple(rdfTriple: RdfTriple, tripleString: String) = {}
+  def handleInvalidTriple(rdfTriple: RdfTriple) = {}
 
+  /*
   def logStatus(processStartTime: Long, rdfLineCount: Long) = {
     if (rdfLineCount % (ONE_MILLION * 10L) == 0) {
       val curTime = System.currentTimeMillis
@@ -77,7 +79,7 @@ abstract class RdfFileProcessor {
         " total elapsed: " + formatTime(curTime - startTime))
       lastTime = curTime
     }
-  }
+  }*/
 
   def validateRdfTriple(subject: String, predicate: String, obj: String): RdfTriple = {
     ValidRdfTriple(
@@ -105,22 +107,21 @@ abstract class RdfFileProcessor {
     val processStartTime = System.currentTimeMillis
     val rdfStream = getRdfStream
     var rdfLineCount = 0
-    try {
-      Stream.continually(rdfStream.readLine)
-        .takeWhile(_ != null)
-        .foreach((tripleString) => {
+    try {/*
+      (new NTripleInputStream(new ReaderInputStream(rdfStream)))
+        .stream
+        .foreach{rdfTriple =>
         rdfLineCount += 1
         logStatus(processStartTime, rdfLineCount)
-        val rdfTriple = parseTriple(tripleString)
         if (rdfTriple.isValid) {
-          rdfLineProcessor(rdfTriple, tripleString)
+          rdfLineProcessor(rdfTriple)
         } else {
-          handleInvalidTriple(rdfTriple, tripleString)
+          handleInvalidTriple(rdfTriple)
         }
-      })
+      }*/
     }
     finally {
-      rdfStream.close
+      //rdfStream.close
     }
   }
 }

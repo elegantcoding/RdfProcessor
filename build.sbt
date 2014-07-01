@@ -10,13 +10,8 @@ scalacOptions ++= Seq("-encoding", "UTF-8", "-deprecation", "-unchecked", "-feat
 
 publishTo := Some(Resolver.file("file",  new File( "c:/usr/elegantcoding.github.io/repo/releases" )) )
 
-resolvers += "grizzled-slf4j-resolver-0" at "https://oss.sonatype.org/content/repositories/releases"
-
 libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "2.2.0" % "test",
-  "org.clapper" %% "grizzled-slf4j" % "1.0.2",
-  "org.slf4j" % "slf4j-simple" % "1.7.7",
-  "org.apache.commons" % "commons-lang3" % "3.1"
+  "org.scalatest" %% "scalatest" % "2.2.0" % "test"
 )
 
 seq(lsSettings :_*)
@@ -33,4 +28,4 @@ instrumentSettings
 
 coverallsSettings
 
-CoverallsKeys.coverallsToken := Some("eztl2jIYCPjwA2JxIniEvkmkEqZYozlfP")
+CoverallsKeys.coverallsToken := Some("KmSfzLvg19I8FOs6PX94bbdZbwcR0ly01")

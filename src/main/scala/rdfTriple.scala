@@ -30,7 +30,7 @@ case class ValidRdfTriple(override val subject: String, override val predicate: 
 
   def isValid() = true
 
-  def size() = 3;
+  def size() = 3
 
   def subjectString = subject
 

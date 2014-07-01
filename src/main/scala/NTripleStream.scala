@@ -1,33 +1,35 @@
 package com.elegantcoding.rdfProcessor
 
 import java.io._
-import rdftriple.InvalidRdfTriple
+import rdftriple.{ValidRdfTriple, InvalidRdfTriple}
+import rdftriple.rdftriple.RdfTriple
 
-class NTripleInputStream(is:InputStream) {
+trait RdfStream {
+  def stream:Stream[RdfTriple]
+  def parseTriple(line:String):RdfTriple
+}
+
+class NTripleStream(is:InputStream) extends RdfStream {
   val reader = new BufferedReader(new InputStreamReader(is))
 
-  def stream:Stream[(String,String,String)] =
+  def stream:Stream[RdfTriple] =
     Stream.continually(reader.readLine)
       .takeWhile((s:String) => s != null)
-      .map(parseTripleSplit(_))
+      .map(parseTriple(_))
 
-  def parseTripleSplit(triple:String):(String,String,String) = {
-    val Array(subj:String, pred:String, obj:String, _:String) = triple.split("\t")
-    (subj, pred, obj)
-  }
-
-  def parseTriple(rdfLine: String) = {
+  // this is significantly faster (half an order of magnitude) than split
+  def parseTriple(rdfLine: String):RdfTriple = {
     val idx = rdfLine.indexOf('\t')
     if (idx <= 0)
-      InvalidRdfTriple(rdfLine.substring(0, idx))
+      return InvalidRdfTriple(rdfLine.substring(0, idx))
     val first = rdfLine.substring(0, idx)
     val idx2 = rdfLine.indexOf('\t', idx + 1)
     if (idx2 <= 0)
-      InvalidRdfTriple(first,
+      return InvalidRdfTriple(first,
         rdfLine.substring(idx + 1, idx2))
     val second = rdfLine.substring(idx + 1, idx2)
     val idx3 = rdfLine.lastIndexOf('\t')
     val third = rdfLine.substring(idx2 + 1, idx3)
-    (first, second, third)
+    ValidRdfTriple(first, second, third)
   }
 }
