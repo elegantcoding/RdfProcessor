@@ -1,6 +1,7 @@
 RdfProcessor
 =======
-[![Coverage Status](https://img.shields.io/coveralls/wfreeman/RdfProcessor.svg)](https://coveralls.io/r/wfreeman/RdfProcessor?branch=master)
+[![Build Status](https://travis-ci.org/elegantcoding/RdfProcessor.svg?branch=master)](https://travis-ci.org/elegantcoding/RdfProcessor)
+[![Coverage Status](https://img.shields.io/coveralls/elegantcoding/RdfProcessor.svg)](https://coveralls.io/r/elegantcoding/RdfProcessor?branch=master)
 
 Still changing rapidly--use at your own risk!
 
