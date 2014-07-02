@@ -1,7 +1,10 @@
+package com.elegantcoding.rdfprocessor.test
+
 import org.scalatest._
-import com.elegantcoding.rdfProcessor._
-import rdftriple.types.RdfTriple
-import rdftriple.InvalidRdfTriple
+
+import com.elegantcoding.rdfprocessor.rdftriple.InvalidRdfTriple
+import com.elegantcoding.rdfprocessor.rdftriple.types.RdfTriple
+import com.elegantcoding.rdfprocessor.NTripleStream
 
 class NTripleStreamSpec extends FlatSpec with Matchers {
 

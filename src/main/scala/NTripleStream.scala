@@ -1,4 +1,4 @@
-package com.elegantcoding.rdfProcessor
+package com.elegantcoding.rdfprocessor
 
 import java.io._
 import rdftriple.{ValidRdfTriple, InvalidRdfTriple}
