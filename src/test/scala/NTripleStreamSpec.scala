@@ -1,8 +1,7 @@
-import java.io.{StringReader, BufferedReader}
 import org.scalatest._
 import com.elegantcoding.rdfProcessor._
-import rdftriple.rdftriple.RdfTriple
-import rdftriple.{InvalidRdfTripleSize0, InvalidRdfTriple, ValidRdfTriple}
+import rdftriple.types.RdfTriple
+import rdftriple.InvalidRdfTriple
 
 class NTripleStreamSpec extends FlatSpec with Matchers {
 
@@ -13,10 +12,10 @@ class NTripleStreamSpec extends FlatSpec with Matchers {
     val nts = new NTripleStream(testStream)
     nts.stream.withFilter(validate(_))
 
-    def validate(rdfTriple:RdfTriple):Boolean = {
-      if(rdfTriple.subjectString != "here") {fail()}
-      if(rdfTriple.predicateString != "is") {fail()}
-      if(rdfTriple.objString != "triple") {fail()}
+    def validate(triple:RdfTriple):Boolean = {
+      if(triple.subjectString != "here") {fail()}
+      if(triple.predicateString != "is") {fail()}
+      if(triple.objectString != "triple") {fail()}
       true
     }
   }
@@ -43,6 +42,26 @@ class NTripleStreamSpec extends FlatSpec with Matchers {
 
     val nts = new NTripleStream(testStream)
     nts.stream.toList.head should equal(InvalidRdfTriple("here", "."))
+  }
+
+  it should "be able to stream and clean" in {
+    val byteArray = """<http://www.w3.org/2001/sw/RDFCore/ntriples/> <http://www.w3.org/1999/02/22-rdf-syntax-nstype> ↵
+<http://xmlns.com/foaf/0.1/Document> .
+<http://www.w3.org/2001/sw/RDFCore/ntriples/> <http://purl.org/dc/terms/title> "N-Triples"@en-US .
+<http://www.w3.org/2001/sw/RDFCore/ntriples/> <http://xmlns.com/foaf/0.1/maker> _:art .
+<http://www.w3.org/2001/sw/RDFCore/ntriples/> <http://xmlns.com/foaf/0.1/maker> _:dave .
+_:art <http://www.w3.org/1999/02/22-rdf-syntax-nstype> <http://xmlns.com/foaf/0.1/Person> .
+_:art <http://xmlns.com/foaf/0.1/name> "Art Barstow".
+_:dave <http://www.w3.org/1999/02/22-rdf-syntax-nstype> <http://xmlns.com/foaf/0.1/Person> .
+_:dave <http://xmlns.com/foaf/0.1/name> "Dave Beckett".""".toCharArray.map(_.toByte)
+    val testStream = new java.io.ByteArrayInputStream(byteArray)
+
+    val nts = new NTripleStream(testStream)
+    nts.stream.map {triple =>
+      triple
+      // TODO clean ns
+    }
+    //TODO test results
   }
 
 }
