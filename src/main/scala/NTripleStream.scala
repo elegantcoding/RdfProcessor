@@ -2,7 +2,7 @@ package com.elegantcoding.rdfProcessor
 
 import java.io._
 import rdftriple.{ValidRdfTriple, InvalidRdfTriple}
-import rdftriple.rdftriple.RdfTriple
+import rdftriple.types.RdfTriple
 
 trait RdfStream {
   def stream:Stream[RdfTriple]
@@ -31,7 +31,7 @@ class NTripleStream(is:InputStream) extends RdfStream {
     if (idx2 <= 0)
       return InvalidRdfTriple(first,
         rdfLine.substring(idx + 1, rdfLine.length).trim())
-    
+
     val second = rdfLine.substring(idx + 1, idx2)
     val idx3 = rdfLine.lastIndexOf('\t')
     val third = rdfLine.substring(idx2 + 1, idx3)

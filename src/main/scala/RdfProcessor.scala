@@ -1,13 +1,10 @@
 package com.elegantcoding.rdfProcessor
 
-import rdftriple.rdftriple.RdfTriple
+import rdftriple.types.RdfTriple
 import java.io.BufferedReader
 import rdftriple._
-//import grizzled.slf4j.Logger
 
 package object rdfProcessor {
-  //val logger = Logger("com.elegantcoding.rdf-processor")
-
   type RdfTripleFilter = Option[(String, String, String) => String]
   type RdfLineProcessor = (RdfTriple) => Unit
   type CleanerFunction = Option[String => String]
@@ -22,7 +19,7 @@ package object rdfProcessor {
 
 import rdfProcessor._
 
-trait RfdCleaner {
+trait RdfCleaner {
   val subjectCleaner: CleanerFunction
   val predicateCleaner: CleanerFunction
   val objectCleaner: CleanerFunction
@@ -39,17 +36,17 @@ trait RfdCleaner {
   def cleanObject(string: String) = cleanString(string, objectCleaner)
 }
 
-object RfdCleaner {
+object RdfCleaner {
   def apply() = emptyRdfCleaner
 
-  def apply(f1: String => String, f2: String => String, f3: String => String) = new Object with RfdCleaner {
+  def apply(f1: String => String, f2: String => String, f3: String => String) = new Object with RdfCleaner {
     override val subjectCleaner = Some(f1)
     override val predicateCleaner = Some(f2)
     override val objectCleaner = Some(f3)
   }
 }
 
-object emptyRdfCleaner extends RfdCleaner {
+object emptyRdfCleaner extends RdfCleaner {
   override val subjectCleaner = None
   override val predicateCleaner = None
   override val objectCleaner = None
@@ -63,7 +60,7 @@ abstract class RdfFileProcessor {
   val rdfLineProcessor: RdfLineProcessor
   val processName: String
 
-  val rfdCleaner = emptyRdfCleaner
+  val rdfCleaner = emptyRdfCleaner
 
   def getRdfStream: BufferedReader
 
@@ -83,9 +80,9 @@ abstract class RdfFileProcessor {
 
   def validateRdfTriple(subject: String, predicate: String, obj: String): RdfTriple = {
     ValidRdfTriple(
-      rfdCleaner.cleanSubject(subject),
-      rfdCleaner.cleanPredicate(predicate),
-      rfdCleaner.cleanObject(obj))
+      rdfCleaner.cleanSubject(subject),
+      rdfCleaner.cleanPredicate(predicate),
+      rdfCleaner.cleanObject(obj))
   }
 
   def parseTriple(rdfLine: String) = {

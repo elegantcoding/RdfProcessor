@@ -1,16 +1,16 @@
 package rdftriple
 
-package object rdftriple {
+package object types {
   type OptionString = Option[String]
-  type RdfTriple = RdfTripleTrait[_]
+  type RdfTriple = RdfTripleTrait[_,_,_]
 }
 
-import rdftriple._
+import types._
 
-trait RdfTripleTrait[T] {
-  val subject: T
-  val predicate: T
-  val obj: T
+trait RdfTripleTrait[ST,PT,OT] {
+  val subject: ST
+  val predicate: PT
+  val obj: OT
 
   def isValid(): Boolean
 
@@ -20,13 +20,13 @@ trait RdfTripleTrait[T] {
 
   def predicateString: String
 
-  def objString: String
+  def objectString: String
 }
 
-abstract class AbstractRdfTriple[T](val subject: T, val predicate: T, val obj: T) extends RdfTripleTrait[T] {}
+abstract class AbstractRdfTriple[ST,PT,OT](val subject: ST, val predicate: PT, val obj: OT) extends RdfTripleTrait[ST,PT,OT] {}
 
 case class ValidRdfTriple(override val subject: String, override val predicate: String, override val obj: String)
-  extends AbstractRdfTriple[String](subject, predicate, obj) {
+  extends AbstractRdfTriple[String,String,String](subject, predicate, obj) {
 
   def isValid() = true
 
@@ -36,11 +36,11 @@ case class ValidRdfTriple(override val subject: String, override val predicate: 
 
   def predicateString = predicate
 
-  def objString = obj
+  def objectString = obj
 }
 
 abstract class BaseInvalidRdfTriple(subject: OptionString, predicate: OptionString, obj: OptionString)
-  extends AbstractRdfTriple[OptionString](subject, predicate, obj) {
+  extends AbstractRdfTriple[OptionString,OptionString,OptionString](subject, predicate, obj) {
 
   private val size_ = (subject, predicate, obj) match {
     case (None, None, None) => 0
@@ -64,7 +64,7 @@ abstract class BaseInvalidRdfTriple(subject: OptionString, predicate: OptionStri
 
   def predicateString = getOptionStringValue(predicate)
 
-  def objString = getOptionStringValue(obj)
+  def objectString = getOptionStringValue(obj)
 }
 
 abstract class InvalidRdfTripleReason(errorString: String)
