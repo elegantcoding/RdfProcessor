@@ -1,4 +1,4 @@
-package rdftriple
+package com.elegantcoding.rdfprocessor.rdftriple
 
 package object types {
   type OptionString = Option[String]

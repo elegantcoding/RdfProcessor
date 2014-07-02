@@ -1,10 +1,12 @@
-package com.elegantcoding.rdfProcessor
+package com.elegantcoding.rdfprocessor
+
+import java.io.BufferedReader
 
 import rdftriple.types.RdfTriple
-import java.io.BufferedReader
-import rdftriple._
+import rdftriple.{ValidRdfTriple, InvalidRdfTriple}
 
-package object rdfProcessor {
+
+package object types {
   type RdfTripleFilter = Option[(String, String, String) => String]
   type RdfLineProcessor = (RdfTriple) => Unit
   type CleanerFunction = Option[String => String]
@@ -17,7 +19,7 @@ package object rdfProcessor {
   }
 }
 
-import rdfProcessor._
+import types._
 
 trait RdfCleaner {
   val subjectCleaner: CleanerFunction
