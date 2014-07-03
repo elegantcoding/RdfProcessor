@@ -56,7 +56,7 @@ abstract class RdfFileProcessor {
   val rdfLineProcessor: RdfLineProcessor
   val processName: String
 
-  val rdfCleaner = emptyRdfCleaner
+  val rdfCleaner:RdfCleaner = emptyRdfCleaner
 
   def getRdfStream: BufferedReader
 
