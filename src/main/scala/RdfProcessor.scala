@@ -5,18 +5,12 @@ import java.io.BufferedReader
 import rdftriple.types.RdfTriple
 import rdftriple.{ValidRdfTriple, InvalidRdfTriple}
 
+import org.apache.commons.io.input.ReaderInputStream
 
 package object types {
   type RdfTripleFilter = Option[(String, String, String) => String]
   type RdfLineProcessor = (RdfTriple) => Unit
   type CleanerFunction = Option[String => String]
-
-  def formatTime(elapsedTime: Long) = {
-    "%02d:%02d:%02d".format(
-      (elapsedTime / 1000) / 3600,
-      ((elapsedTime / 1000) / 60) % 60,
-      (elapsedTime / 1000) % 60)
-  }
 }
 
 import types._
@@ -103,21 +97,19 @@ abstract class RdfFileProcessor {
   }
 
   def processRdfFile() = {
-    val processStartTime = System.currentTimeMillis
     val rdfStream = getRdfStream
     var rdfLineCount = 0
-    try {/*
-      (new NTripleInputStream(new ReaderInputStream(rdfStream)))
+    try {
+      (new NTripleStream(new ReaderInputStream(rdfStream)))
         .stream
-        .foreach{rdfTriple =>
+        .foreach{triple =>
         rdfLineCount += 1
-        logStatus(processStartTime, rdfLineCount)
-        if (rdfTriple.isValid) {
-          rdfLineProcessor(rdfTriple)
+        if (triple.isValid) {
+          rdfLineProcessor(triple)
         } else {
-          handleInvalidTriple(rdfTriple)
+          handleInvalidTriple(triple)
         }
-      }*/
+      }
     }
     finally {
       //rdfStream.close

@@ -1,6 +1,6 @@
 name := "rdf-processor"
 
-version := "0.3.0"
+version := "0.3.1"
 
 organization := "com.elegantcoding"
 
@@ -11,7 +11,8 @@ scalacOptions ++= Seq("-encoding", "UTF-8", "-deprecation", "-unchecked", "-feat
 publishTo := Some(Resolver.file("file",  new File( "c:/usr/elegantcoding.github.io/repo/releases" )) )
 
 libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "2.2.0" % "test"
+  "org.scalatest" %% "scalatest" % "2.2.0" % "test",
+  "commons-io" % "commons-io" % "2.4"
 )
 
 seq(lsSettings :_*)
