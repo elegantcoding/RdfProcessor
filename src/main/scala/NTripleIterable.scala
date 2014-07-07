@@ -4,16 +4,15 @@ import java.io._
 import rdftriple.{ValidRdfTriple, InvalidRdfTriple}
 import rdftriple.types.RdfTriple
 
-trait RdfStream {
-  def stream:Stream[RdfTriple]
-  def parseTriple(line:String):RdfTriple
+trait RdfTripleIterable extends Iterable[RdfTriple]{
+  def iterator:Iterator[RdfTriple]
 }
 
-class NTripleStream(is:InputStream) extends RdfStream {
+class NTripleIterable(is:InputStream) extends RdfTripleIterable {
   val reader = new BufferedReader(new InputStreamReader(is))
 
-  def stream:Stream[RdfTriple] =
-    Stream.continually(reader.readLine)
+  override def iterator:Iterator[RdfTriple] =
+    Iterator.continually(reader.readLine)
       .takeWhile((s:String) => s != null)
       .map(parseTriple(_))
 

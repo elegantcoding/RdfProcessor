@@ -100,8 +100,7 @@ abstract class RdfFileProcessor {
     val rdfStream = getRdfStream
     var rdfLineCount = 0
     try {
-      (new NTripleStream(new ReaderInputStream(rdfStream)))
-        .stream
+      (new NTripleIterable(new ReaderInputStream(rdfStream)))
         .foreach{triple =>
         rdfLineCount += 1
         if (triple.isValid) {
