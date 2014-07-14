@@ -8,12 +8,13 @@ trait RdfTripleIterable extends Iterable[RdfTriple]{
   def iterator:Iterator[RdfTriple]
 }
 
-class NTripleIterable(is:InputStream) extends RdfTripleIterable {
-  val reader = new BufferedReader(new InputStreamReader(is))
+class NTripleIterable(is:InputStream, filter:(String)=>Boolean = (s:String) => true) extends RdfTripleIterable {
+  val reader = new BufferedReader(new InputStreamReader(is), 8192*256)
 
   override def iterator:Iterator[RdfTriple] =
     Iterator.continually(reader.readLine)
       .takeWhile((s:String) => s != null)
+      .withFilter(filter)
       .map(parseTriple(_))
 
   // this is significantly faster (half an order of magnitude) than split
@@ -32,7 +33,10 @@ class NTripleIterable(is:InputStream) extends RdfTripleIterable {
         rdfLine.substring(idx + 1, rdfLine.length).trim())
 
     val second = rdfLine.substring(idx + 1, idx2)
-    val idx3 = rdfLine.lastIndexOf('\t')
+    val idx3 = rdfLine.indexOf('\t', idx2 + 1)
+    if (idx3 <= 0)
+      return InvalidRdfTriple(first, second,
+        rdfLine.substring(idx2 + 1, rdfLine.length).trim())
     val third = rdfLine.substring(idx2 + 1, idx3)
     ValidRdfTriple(first, second, third)
   }

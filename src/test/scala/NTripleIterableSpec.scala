@@ -47,24 +47,12 @@ class NTripleIterableSpec extends FlatSpec with Matchers {
     nts.toList.head should equal(InvalidRdfTriple("here", "."))
   }
 
-  it should "be able to stream and clean" in {
-    val byteArray = """<http://www.w3.org/2001/sw/RDFCore/ntriples/> <http://www.w3.org/1999/02/22-rdf-syntax-nstype> ↵
-<http://xmlns.com/foaf/0.1/Document> .
-<http://www.w3.org/2001/sw/RDFCore/ntriples/> <http://purl.org/dc/terms/title> "N-Triples"@en-US .
-<http://www.w3.org/2001/sw/RDFCore/ntriples/> <http://xmlns.com/foaf/0.1/maker> _:art .
-<http://www.w3.org/2001/sw/RDFCore/ntriples/> <http://xmlns.com/foaf/0.1/maker> _:dave .
-_:art <http://www.w3.org/1999/02/22-rdf-syntax-nstype> <http://xmlns.com/foaf/0.1/Person> .
-_:art <http://xmlns.com/foaf/0.1/name> "Art Barstow".
-_:dave <http://www.w3.org/1999/02/22-rdf-syntax-nstype> <http://xmlns.com/foaf/0.1/Person> .
-_:dave <http://xmlns.com/foaf/0.1/name> "Dave Beckett".""".toCharArray.map(_.toByte)
+  it should "be able to iterate invalid triples length 3" in {
+    val byteArray = ("1\t2\t3\n").toCharArray.map(_.toByte)
     val testStream = new java.io.ByteArrayInputStream(byteArray)
 
     val nts = new NTripleIterable(testStream)
-    nts.map {triple =>
-      triple
-      // TODO clean ns
-    }
-    //TODO test results
+    nts.toList.head should equal(InvalidRdfTriple("1", "2", "3"))
   }
 
 }
