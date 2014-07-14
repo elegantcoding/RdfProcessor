@@ -2,7 +2,7 @@ package com.elegantcoding.rdfprocessor.test
 
 import org.scalatest._
 
-import com.elegantcoding.rdfprocessor.rdftriple.InvalidRdfTriple
+import com.elegantcoding.rdfprocessor.rdftriple.{ValidRdfTriple, InvalidRdfTriple}
 import com.elegantcoding.rdfprocessor.rdftriple.types.RdfTriple
 import com.elegantcoding.rdfprocessor.{NTripleIterable}
 
