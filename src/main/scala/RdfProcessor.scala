@@ -62,18 +62,6 @@ abstract class RdfFileProcessor {
 
   def handleInvalidTriple(rdfTriple: RdfTriple) = {}
 
-  /*
-  def logStatus(processStartTime: Long, rdfLineCount: Long) = {
-    if (rdfLineCount % (ONE_MILLION * 10L) == 0) {
-      val curTime = System.currentTimeMillis
-      logger.info(processName + ": " + rdfLineCount / 1000000 + "M tripleString lines processed" +
-        "; last 10M: " + formatTime(curTime - lastTime) +
-        "; process elapsed: " + formatTime(curTime - processStartTime) +
-        " total elapsed: " + formatTime(curTime - startTime))
-      lastTime = curTime
-    }
-  }*/
-
   def validateRdfTriple(subject: String, predicate: String, obj: String): RdfTriple = {
     ValidRdfTriple(
       rdfCleaner.cleanSubject(subject),
