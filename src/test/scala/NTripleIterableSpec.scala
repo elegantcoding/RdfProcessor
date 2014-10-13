@@ -27,7 +27,7 @@ class NTripleIterableSpec extends FlatSpec with Matchers {
     val byteArray = "\n".toCharArray.map(_.toByte)
     val testStream = new java.io.ByteArrayInputStream(byteArray)
 
-    val nts = new NTripleIterable(testStream)
+    val nts = NTripleIterable(testStream)
     nts.toList.head should equal(InvalidRdfTriple())
   }
 
@@ -35,7 +35,7 @@ class NTripleIterableSpec extends FlatSpec with Matchers {
     val byteArray = ".\n".toCharArray.map(_.toByte)
     val testStream = new java.io.ByteArrayInputStream(byteArray)
 
-    val nts = new NTripleIterable(testStream)
+    val nts = NTripleIterable(testStream)
     nts.toList.head should equal(InvalidRdfTriple("."))
   }
 
@@ -43,7 +43,7 @@ class NTripleIterableSpec extends FlatSpec with Matchers {
     val byteArray = "here\t.\n".toCharArray.map(_.toByte)
     val testStream = new java.io.ByteArrayInputStream(byteArray)
 
-    val nts = new NTripleIterable(testStream)
+    val nts = NTripleIterable(testStream)
     nts.toList.head should equal(InvalidRdfTriple("here", "."))
   }
 
@@ -51,7 +51,7 @@ class NTripleIterableSpec extends FlatSpec with Matchers {
     val byteArray = ("1\t2\t3\n").toCharArray.map(_.toByte)
     val testStream = new java.io.ByteArrayInputStream(byteArray)
 
-    val nts = new NTripleIterable(testStream)
+    val nts = NTripleIterable(testStream)
     nts.toList.head should equal(InvalidRdfTriple("1", "2", "3"))
   }
 

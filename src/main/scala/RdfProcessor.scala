@@ -7,6 +7,8 @@ import rdftriple.{ValidRdfTriple, InvalidRdfTriple}
 
 import org.apache.commons.io.input.ReaderInputStream
 
+/*
+
 package object types {
   type RdfTripleFilter = Option[(String, String, String) => String]
   type RdfLineProcessor = (RdfTriple) => Unit
@@ -48,7 +50,7 @@ object emptyRdfCleaner extends RdfCleaner {
   override val objectCleaner = None
 }
 
-abstract class RdfFileProcessor {
+abstract class RdfFileP,rocessor {
   val ONE_MILLION = 1000000L
   val startTime = System.currentTimeMillis
   var lastTime = System.currentTimeMillis
@@ -104,3 +106,4 @@ abstract class RdfFileProcessor {
   }
 }
 
+*/
