@@ -14,7 +14,6 @@ private object DefaultValue {
 }
 
 trait RdfTupleParser[A <: RdfTriple] {
-  def validate(rdfTuple : A) : A
   def parseTriple(rdfLine: String) : A
 }
 
@@ -23,15 +22,15 @@ abstract class RdfTupleLineIterable[A <: RdfTriple](val inputStream : InputStrea
                                                     val lineFilter : LineFilter,
                                                     val tupleFilter : RdfTupleFilter[A]
                                                      ) extends Iterable[A] with RdfTupleParser[A] {
-  val reader = new BufferedReader(new InputStreamReader(inputStream), bufferSize)
 
-  def validate(rdfTuple : A) = rdfTuple
+  val reader = new BufferedReader(new InputStreamReader(inputStream), bufferSize)
 
   def iterator:Iterator[A] =
     Iterator.continually(reader.readLine)
       .takeWhile((s:String) => s != null)
       .withFilter(lineFilter)
       .map(parseTriple(_))
+      .withFilter(tupleFilter)
 }
 
 trait NTripleParser extends RdfTupleParser[RdfTriple] {
@@ -64,7 +63,7 @@ trait NTripleParser extends RdfTupleParser[RdfTriple] {
 
     val rdfTriple = ValidRdfTriple(first, second, third)
 
-    validate(rdfTriple)
+    rdfTriple
   }
 }
 
@@ -79,8 +78,6 @@ class NTripleIterable[A <: RdfTriple](inputStream : InputStream,
     extends RdfTupleLineIterable(inputStream, bufferSize, lineFilter, tupleFilter) with NTripleParser {
 
     def this(inputStream : InputStream) = this(inputStream, DefaultValue.BUFFER_SIZE, DefaultValue.LINE_FILTER, DefaultValue.TRIPLE_FILTER)
-
-    override def validate(rdfTriple : RdfTriple) = if (tupleFilter(rdfTriple)) rdfTriple else new FilteredInvalidRdfTriple(rdfTriple)
 }
 
 object NTripleIterable {
@@ -99,6 +96,4 @@ class NQuadrupleIterable[A <: RdfQuadruple](inputStream : InputStream,
   extends RdfTupleLineIterable(inputStream, bufferSize, lineFilter, tupleFilter) with NQuadrupleParser {
 
   def this(inputStream : InputStream) = this(inputStream, DefaultValue.BUFFER_SIZE, DefaultValue.LINE_FILTER, DefaultValue.QUADRUPLE_FILTER)
-
-  //override def validate(rdfQuadruple : RdfQuadruple) = if (tupleFilter(rdfQuadruple)) rdfQuadruple else new FilteredInvalidRdfQuadruple(rdfQuadruple)
 }
