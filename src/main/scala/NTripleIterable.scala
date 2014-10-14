@@ -2,7 +2,7 @@ package com.elegantcoding.rdfprocessor
 
 import java.io._
 import scala.language.existentials
-import com.elegantcoding.rdfprocessor.rdftriple.{ValidRdfQuadruple, ValidRdfTriple, InvalidRdfTriple, FilteredInvalidRdfTriple}
+import com.elegantcoding.rdfprocessor.rdftriple.{ValidRdfQuadruple, ValidRdfTriple, InvalidRdfTriple}
 import com.elegantcoding.rdfprocessor.rdftriple.types.{RdfQuadruple, RdfTriple, LineFilter, RdfTupleFilter}
 
 private object DefaultValue {

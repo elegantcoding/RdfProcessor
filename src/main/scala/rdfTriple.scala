@@ -137,10 +137,6 @@ case class InvalidRdfTriple(override val subject: OptionString, override val pre
   extends BaseInvalidRdfTriple(subject, predicate, obj) {
 }
 
-case class FilteredInvalidRdfTriple(rdfTriple : RdfTriple, invalidRdfTripleReason: InvalidRdfTripleReason = new InvalidRdfTripleFiltered())
-  extends BaseInvalidRdfTriple(rdfTriple) {
-}
-
 object InvalidRdfTriple {
   def apply() = new InvalidRdfTriple(None, None, None, new InvalidRdfTripleSize0())
 
