@@ -87,6 +87,11 @@ object NTripleIterable {
             lineFilter : LineFilter = DefaultValue.LINE_FILTER,
             tupleFilter : RdfTupleFilter[RdfTriple] = DefaultValue.TRIPLE_FILTER) =
     new NTripleIterable(inputStream, bufferSize, lineFilter, tupleFilter)
+
+  def apply(inputStream : InputStream,
+            tupleFilter : RdfTupleFilter[RdfTriple]) =
+    new NTripleIterable(inputStream, DefaultValue.BUFFER_SIZE, DefaultValue.LINE_FILTER, tupleFilter)
+
 }
 
 class NQuadrupleIterable[A <: RdfQuadruple](inputStream : InputStream,
