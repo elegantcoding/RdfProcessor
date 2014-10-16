@@ -21,6 +21,7 @@ package object types {
   type LineFilter = (String) => Boolean
 
   type RdfTupleFilter[A <: RdfTriple] = (A) => Boolean
+  type RdfTripleFilter = RdfTupleFilter[RdfTriple]
 }
 
 import types._

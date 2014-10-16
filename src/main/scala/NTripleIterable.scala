@@ -85,12 +85,12 @@ object NTripleIterable {
   def apply(inputStream : InputStream,
             bufferSize : Int = DefaultValue.BUFFER_SIZE,
             lineFilter : LineFilter = DefaultValue.LINE_FILTER,
-            tupleFilter : RdfTupleFilter[RdfTriple] = DefaultValue.TRIPLE_FILTER) =
-    new NTripleIterable(inputStream, bufferSize, lineFilter, tupleFilter)
+            tripleFilter : RdfTupleFilter[RdfTriple] = DefaultValue.TRIPLE_FILTER) =
+    new NTripleIterable(inputStream, bufferSize, lineFilter, tripleFilter)
 
   def apply(inputStream : InputStream,
-            tupleFilter : RdfTupleFilter[RdfTriple]) =
-    new NTripleIterable(inputStream, DefaultValue.BUFFER_SIZE, DefaultValue.LINE_FILTER, tupleFilter)
+            tripleFilter : RdfTupleFilter[RdfTriple]) =
+    new NTripleIterable(inputStream, DefaultValue.BUFFER_SIZE, DefaultValue.LINE_FILTER, tripleFilter)
 
 }
 
